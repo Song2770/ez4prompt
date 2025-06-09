@@ -6,7 +6,6 @@ class TeleprompterApp {
         this.currentSettings = this.getDefaultSettings();
         this.scrollController = null;
         this.activePanel = null;
-        this.currentLanguage = 'zh-CN';
         this.sidebarHidden = false;
         this.countdownDuration = 0;
         
@@ -36,22 +35,21 @@ class TeleprompterApp {
     getDefaultSettings() {
         return {
             theme: 'dark',
-            fontSize: 16,
+            fontSize: 40,
             fontFamily: 'SimSun, serif',
             fontColor: '#ffffff',
-            marginLeft: 50,
+            marginLeft: 100,
             marginRight: 50,
             letterSpacing: 1,
             lineHeight: 1.6,
-            autoScroll: false,
+            autoScroll: true,
             scrollType: 'line',
-            scrollSpeed: 30,
+            scrollSpeed: 10,
             horizontalFlip: false,
             verticalFlip: false,
             watermarkEnabled: false,
             watermarkText: '',
             watermarkType: 'center',
-            language: 'zh-CN',
             countdownDuration: 0
         };
     }
@@ -67,14 +65,19 @@ class TeleprompterApp {
             window.themeController.toggleTheme();
         });
         
-        // 播放/暂停 - 现在包含倒计时功能
+        // 播放/暂停 - 检查自动滚动设置
         document.getElementById('playBtn').addEventListener('click', () => {
-            this.showCountdownSettings();
-        });
-        
-        // 语言切换
-        document.getElementById('languageBtn').addEventListener('click', () => {
-            this.toggleLanguage();
+            const autoScrollEnabled = document.getElementById('autoScroll').checked;
+            if (!autoScrollEnabled) {
+                alert('请先在滚动设置中启用自动滚动功能');
+                return;
+            }
+            
+            if (this.isPlaying) {
+                this.pauseReading();
+            } else {
+                this.startCountdownAndPlay();
+            }
         });
         
         // 文本锁定
@@ -99,10 +102,7 @@ class TeleprompterApp {
             window.textController.handleFileImport(e);
         });
         
-        // 倒计时设置
-        document.getElementById('startCountdown').addEventListener('click', () => {
-            this.startCountdownAndPlay();
-        });
+
         
         // 键盘快捷键
         document.addEventListener('keydown', (e) => {
@@ -146,6 +146,9 @@ class TeleprompterApp {
                     const panelId = this.getPanelIdForButton(btn.id);
                     if (panelId) {
                         this.showSettingsPanel(panelId, btn);
+                    } else {
+                        // 如果当前按钮没有对应的设置面板，关闭已打开的面板
+                        this.closeAllPanels();
                     }
                 }
             });
@@ -196,29 +199,31 @@ class TeleprompterApp {
         
         // 定位面板
         const rect = buttonElement.getBoundingClientRect();
-        panel.style.left = `${rect.right + 10}px`;
-        panel.style.top = `${rect.top}px`;
+        let leftPos = rect.right + 10;
+        let topPos = rect.top;
+        
+        // 检查面板是否会超出屏幕底部
+        const panelHeight = panel.offsetHeight || 200; // 默认高度
+        const windowHeight = window.innerHeight;
+        
+        if (topPos + panelHeight > windowHeight) {
+            // 如果超出底部，将面板向上调整
+            topPos = windowHeight - panelHeight - 20; // 留20px边距
+        }
+        
+        // 确保面板不会超出屏幕顶部
+        if (topPos < 20) {
+            topPos = 20;
+        }
+        
+        panel.style.left = `${leftPos}px`;
+        panel.style.top = `${topPos}px`;
         
         // 激活按钮样式
         buttonElement.classList.add('active');
     }
     
-    showCountdownSettings() {
-        this.closeAllPanels();
-        
-        const panel = document.getElementById('countdownSettings');
-        const playBtn = document.getElementById('playBtn');
-        
-        panel.style.display = 'block';
-        this.activePanel = 'countdownSettings';
-        
-        // 定位面板
-        const rect = playBtn.getBoundingClientRect();
-        panel.style.left = `${rect.right + 10}px`;
-        panel.style.top = `${rect.top}px`;
-        
-        playBtn.classList.add('active');
-    }
+
     
     toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
@@ -283,50 +288,6 @@ class TeleprompterApp {
                 document.body.classList.remove('fullscreen');
             });
         }
-    }
-    
-    toggleLanguage() {
-        // 简单的语言切换示例
-        if (this.currentLanguage === 'zh-CN') {
-            this.currentLanguage = 'en-US';
-            this.updateLanguageDisplay('English');
-        } else {
-            this.currentLanguage = 'zh-CN';
-            this.updateLanguageDisplay('中文');
-        }
-        
-        // 保存语言设置
-        localStorage.setItem('teleprompter-language', this.currentLanguage);
-        
-        // 更新语音识别语言
-        if (window.audioController && window.audioController.recognition) {
-            window.audioController.recognition.lang = this.currentLanguage;
-        }
-    }
-    
-    updateLanguageDisplay(languageName) {
-        // 可以在这里更新界面语言显示
-        console.log(`语言已切换到: ${languageName}`);
-        
-        // 显示临时提示
-        const notification = document.createElement('div');
-        notification.textContent = `语言已切换到: ${languageName}`;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            z-index: 2000;
-            animation: fadeInOut 2s ease;
-        `;
-        
-        document.body.appendChild(notification);
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 2000);
     }
     
     startCountdownAndPlay() {
@@ -498,11 +459,18 @@ class TeleprompterApp {
         
         // 拖拽滚动条
         let isDragging = false;
+        let wasAutoScrolling = false;
         
         thumb.addEventListener('mousedown', (e) => {
             isDragging = true;
             const startY = e.clientY;
             const startScrollTop = editor.scrollTop;
+            
+            // 如果正在自动滚动，暂停自动滚动
+            if (window.scrollController && window.scrollController.isAutoScrolling) {
+                wasAutoScrolling = true;
+                window.scrollController.stopAutoScroll();
+            }
             
             const mouseMoveHandler = (e) => {
                 if (!isDragging) return;
@@ -516,6 +484,14 @@ class TeleprompterApp {
             
             const mouseUpHandler = () => {
                 isDragging = false;
+                
+                // 如果之前在自动滚动，更新滚动控制器的当前位置并恢复自动滚动
+                if (wasAutoScrolling && window.scrollController) {
+                    window.scrollController.currentScrollPosition = editor.scrollTop;
+                    window.scrollController.startAutoScroll();
+                }
+                
+                wasAutoScrolling = false;
                 document.removeEventListener('mousemove', mouseMoveHandler);
                 document.removeEventListener('mouseup', mouseUpHandler);
             };
@@ -531,11 +507,33 @@ class TeleprompterApp {
             const clickRatio = e.offsetY / scrollbar.clientHeight;
             const newScrollTop = clickRatio * (editor.scrollHeight - editor.clientHeight);
             
+            // 如果正在自动滚动，暂停并更新位置
+            const wasAutoScrollingOnClick = window.scrollController && window.scrollController.isAutoScrolling;
+            if (wasAutoScrollingOnClick) {
+                window.scrollController.stopAutoScroll();
+            }
+            
             // 使用平滑滚动
             if (window.scrollController) {
                 window.scrollController.smoothScrollTo(newScrollTop);
+                
+                // 如果之前在自动滚动，在平滑滚动完成后恢复自动滚动
+                if (wasAutoScrollingOnClick) {
+                    setTimeout(() => {
+                        if (window.scrollController) {
+                            window.scrollController.currentScrollPosition = newScrollTop;
+                            window.scrollController.startAutoScroll();
+                        }
+                    }, 500); // 等待平滑滚动完成（500ms）
+                }
             } else {
                 editor.scrollTop = newScrollTop;
+                
+                // 如果之前在自动滚动，立即恢复
+                if (wasAutoScrollingOnClick && window.scrollController) {
+                    window.scrollController.currentScrollPosition = newScrollTop;
+                    window.scrollController.startAutoScroll();
+                }
             }
         });
         

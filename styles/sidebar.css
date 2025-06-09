@@ -74,11 +74,25 @@
     border: 2px solid #007bff;
 }
 
+/* 侧边栏切换按钮容器 */
+.sidebar-toggle-container {
+    position: fixed;
+    left: 90px; /* 侧边栏右侧 */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
+
+/* 当侧边栏隐藏时，切换按钮贴边 */
+.sidebar.hidden ~ .sidebar-toggle-container {
+    left: 10px; /* 贴边位置 */
+}
+
 /* 隐藏/显示按钮特殊样式 */
 .sidebar-toggle {
-    margin-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 10px;
+    transition: all 0.3s ease;
+    width: 25px;
 }
 
 /* 左侧边缘触发区域 */
@@ -143,6 +157,14 @@
     
     .sidebar-trigger {
         width: 15px;
+    }
+    
+    .sidebar-toggle-container {
+        left: 70px; /* 移动端侧边栏右侧 */
+    }
+    
+    .sidebar.hidden ~ .sidebar-toggle-container {
+        left: 10px; /* 移动端贴边位置 */
     }
 }
 

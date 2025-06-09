@@ -4,9 +4,16 @@
     color: #333333;
 }
 
-.light-theme .top-header {
-    background: rgba(238, 247, 252, 0.9);
+.light-theme .logo-widget {
+    background: rgba(255, 255, 255, 0.9);
     color: #333333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .time-widget {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .light-theme .lock-btn {
@@ -51,9 +58,16 @@
     color: #ffffff;
 }
 
-.dark-theme .top-header {
-    background: rgba(20, 20, 20, 0.9);
+.dark-theme .logo-widget {
+    background: rgba(40, 40, 40, 0.9);
     color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme .time-widget {
+    background: rgba(40, 40, 40, 0.9);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .dark-theme .lock-btn {
@@ -101,6 +115,10 @@
     background: rgba(40, 40, 40, 0.9);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .sidebar-btn img {
+    filter: invert(1) brightness(0.9);
 }
 
 .dark-theme .record-control-btn {

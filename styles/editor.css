@@ -69,7 +69,8 @@
 /* 移动端文本编辑器 */
 @media (max-width: 768px) {
     .text-editor {
-        padding: 15px 30px;
+        padding: 15px 60px;
+        padding-bottom: 75vh; /* 移动端也保持底部额外空间 */
         font-size: 14px;
         line-height: 1.5;
     }

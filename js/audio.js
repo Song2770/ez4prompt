@@ -20,7 +20,6 @@ class AudioController {
         const startBtn = document.getElementById('startRecord');
         const stopBtn = document.getElementById('stopRecord');
         const playBtn = document.getElementById('playRecord');
-        const saveBtn = document.getElementById('saveRecord');
         const audioSyncCheckbox = document.getElementById('audioSync');
         
         startBtn.addEventListener('click', () => {
@@ -35,13 +34,12 @@ class AudioController {
             this.playRecording();
         });
         
-        saveBtn.addEventListener('click', () => {
-            this.saveRecording();
-        });
-        
         audioSyncCheckbox.addEventListener('change', () => {
             this.toggleAudioSync(audioSyncCheckbox.checked);
         });
+        
+        // 音频播放弹窗控制
+        this.setupAudioPlayerModal();
     }
     
     async startRecording() {
@@ -90,36 +88,21 @@ class AudioController {
     
     playRecording() {
         if (this.audioUrl) {
-            const audio = document.getElementById('audioPlayer');
-            audio.src = this.audioUrl;
-            audio.play();
+            this.showAudioPlayerModal();
         }
     }
     
-    saveRecording() {
-        if (this.audioBlob) {
-            const url = URL.createObjectURL(this.audioBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `teleprompter-recording-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.wav`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-    }
+
     
     updateRecordingControls() {
         const startBtn = document.getElementById('startRecord');
         const stopBtn = document.getElementById('stopRecord');
         const playBtn = document.getElementById('playRecord');
-        const saveBtn = document.getElementById('saveRecord');
         
         if (this.isRecording) {
             startBtn.disabled = true;
             stopBtn.disabled = false;
             playBtn.disabled = true;
-            saveBtn.disabled = true;
             startBtn.textContent = '录音中...';
             startBtn.style.background = '#dc3545';
         } else {
@@ -130,7 +113,6 @@ class AudioController {
             
             if (this.audioUrl) {
                 playBtn.disabled = false;
-                saveBtn.disabled = false;
             }
         }
     }
@@ -197,9 +179,107 @@ class AudioController {
     }
     
     toggleAudioSync(enabled) {
-        if (enabled && !this.recognition) {
-            alert('当前浏览器不支持语音识别功能');
-            document.getElementById('audioSync').checked = false;
+        if (enabled && this.recognition) {
+            console.log('音频智能识别滚动已启用');
+        } else {
+            console.log('音频智能识别滚动已禁用');
+        }
+    }
+    
+    setupAudioPlayerModal() {
+        const modal = document.getElementById('audioPlayerModal');
+        const closeBtn = document.getElementById('closeAudioPlayer');
+        const replayBtn = document.getElementById('replayAudio');
+        const downloadBtn = document.getElementById('downloadAudio');
+        const audio = document.getElementById('audioPlayer');
+        
+        // 关闭弹窗
+        closeBtn.addEventListener('click', () => {
+            this.hideAudioPlayerModal();
+        });
+        
+        // 点击背景关闭弹窗
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.hideAudioPlayerModal();
+            }
+        });
+        
+        // 重新播放
+        replayBtn.addEventListener('click', () => {
+            audio.currentTime = 0;
+            audio.play();
+        });
+        
+        // 下载录音
+        downloadBtn.addEventListener('click', () => {
+            if (this.audioBlob) {
+                const url = URL.createObjectURL(this.audioBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `teleprompter-recording-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.wav`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+        
+        // 音频加载完成时更新时长
+        audio.addEventListener('loadedmetadata', () => {
+            this.updateAudioInfo();
+        });
+        
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                this.hideAudioPlayerModal();
+            }
+        });
+    }
+    
+    showAudioPlayerModal() {
+        const modal = document.getElementById('audioPlayerModal');
+        const audio = document.getElementById('audioPlayer');
+        
+        // 设置音频源
+        audio.src = this.audioUrl;
+        
+        // 显示弹窗
+        modal.style.display = 'flex';
+        
+        // 更新音频信息
+        this.updateAudioInfo();
+    }
+    
+    hideAudioPlayerModal() {
+        const modal = document.getElementById('audioPlayerModal');
+        const audio = document.getElementById('audioPlayer');
+        
+        // 暂停播放
+        audio.pause();
+        
+        // 隐藏弹窗
+        modal.style.display = 'none';
+    }
+    
+    updateAudioInfo() {
+        const audio = document.getElementById('audioPlayer');
+        const fileNameSpan = document.getElementById('audioFileName');
+        const durationSpan = document.getElementById('audioDuration');
+        
+        // 更新文件名
+        const now = new Date();
+        const fileName = `录音-${now.toLocaleDateString()}-${now.toLocaleTimeString()}`;
+        fileNameSpan.textContent = fileName;
+        
+        // 更新时长
+        if (audio.duration && !isNaN(audio.duration)) {
+            const minutes = Math.floor(audio.duration / 60);
+            const seconds = Math.floor(audio.duration % 60);
+            durationSpan.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            durationSpan.textContent = '--:--';
         }
     }
 }

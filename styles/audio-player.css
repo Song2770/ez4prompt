@@ -1,0 +1,223 @@
+/* 音频播放弹窗样式 */
+.audio-player-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.audio-player-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    min-width: 400px;
+    max-width: 500px;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.audio-player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.audio-player-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.audio-player-body {
+    padding: 24px;
+}
+
+.audio-player-body audio {
+    width: 100%;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.audio-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+#audioFileName {
+    font-weight: 500;
+    color: #333;
+}
+
+#audioDuration {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.audio-player-footer {
+    padding: 16px 24px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.audio-control-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.audio-control-btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+.audio-control-btn:active {
+    transform: translateY(0);
+}
+
+#downloadAudio {
+    background: #2196F3;
+    color: white;
+}
+
+#downloadAudio:hover {
+    background: #1976D2;
+}
+
+/* 深色主题适配 */
+.dark-theme .audio-player-content {
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .audio-player-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .audio-player-header h3 {
+    color: #ffffff;
+}
+
+.dark-theme .close-btn {
+    color: #cccccc;
+}
+
+.dark-theme .close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dark-theme .audio-info {
+    color: #cccccc;
+}
+
+.dark-theme #audioFileName {
+    color: #ffffff;
+}
+
+.dark-theme #audioDuration {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dark-theme .audio-control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dark-theme .audio-control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme #downloadAudio {
+    background: #2196F3;
+    color: white;
+}
+
+.dark-theme #downloadAudio:hover {
+    background: #1976D2;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .audio-player-content {
+        min-width: 90vw;
+        max-width: 90vw;
+        margin: 20px;
+    }
+    
+    .audio-player-footer {
+        flex-direction: column;
+    }
+    
+    .audio-control-btn {
+        width: 100%;
+    }
+}

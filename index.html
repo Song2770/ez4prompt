@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="styles/theme.css">
     <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="styles/editor.css">
+    <link rel="stylesheet" href="styles/audio-player.css">
 </head>
 <body class="dark-theme">
-    <!-- 顶部信息栏 -->
-    <header class="top-header">
-        <div class="logo-area">
-            <img src="images/logo.svg" alt="Logo" class="logo">
-            <span class="project-name">智能提词器</span>
-        </div>
-        <div class="time-display" id="timeDisplay"></div>
-    </header>
+    <!-- Logo区域 - 居中圆角控件 -->
+    <div class="logo-widget">
+        <img src="images/logo.svg" alt="Logo" class="logo">
+        <span class="project-name">智能提词器</span>
+    </div>
+    
+    <!-- 计时器 - 右上角圆角控件 -->
+    <div class="time-widget" id="timeDisplay"></div>
 
     <!-- 红色定位线 -->
     <div class="reading-line" id="readingLine"></div>
@@ -64,14 +65,17 @@
             <img src="images/record.svg" alt="录音">
         </button>
         
-        <button class="sidebar-btn" id="languageBtn" title="切换语言">
+        <!-- <button class="sidebar-btn" id="languageBtn" title="切换语言">
             <img src="images/language.svg" alt="语言">
-        </button>
-        
+        </button> -->
+    </aside>
+    
+    <!-- 侧边栏切换按钮 - 独立于侧边栏右侧 -->
+    <div class="sidebar-toggle-container" id="sidebarToggleContainer">
         <button class="sidebar-btn sidebar-toggle" id="sidebarToggle" title="隐藏功能区">
             <img src="images/chevron-left.svg" alt="隐藏">
         </button>
-    </aside>
+    </div>
 
     <!-- 左侧边缘触发区域 -->
     <div class="sidebar-trigger" id="sidebarTrigger"></div>
@@ -96,10 +100,10 @@
         <h3>滚动设置</h3>
         <div class="setting-group">
             <label>
-                <input type="checkbox" id="autoScroll"> 自动滚动
+                <input type="checkbox" id="autoScroll" checked> 自动滚动
             </label>
         </div>
-        <div class="setting-group" id="autoScrollOptions" style="display: none;">
+        <div class="setting-group" id="autoScrollOptions">
             <label>滚动类型：
                 <select id="scrollType">
                     <option value="line">按行滚动</option>
@@ -107,8 +111,8 @@
                 </select>
             </label>
             <label>滚动速度：
-                <input type="range" id="scrollSpeed" min="1" max="100" value="30">
-                <span id="scrollSpeedValue">30</span>
+                <input type="range" id="scrollSpeed" min="1" max="100" value="10">
+                <span id="scrollSpeedValue">10</span>
             </label>
             <label>
                 <input type="checkbox" id="autoDuration"> 根据全文时长自动计算
@@ -118,6 +122,9 @@
                     <input type="number" id="totalDuration" min="1" max="120" value="10">
                 </label>
             </div>
+            <label>倒计时时长（秒）：
+                <input type="number" id="countdownDuration" min="0" max="10" value="0">
+            </label>
         </div>
     </div>
 
@@ -133,15 +140,15 @@
                 </select>
             </label>
             <label>字号：
-                <input type="range" id="fontSize" min="12" max="72" value="16">
-                <span id="fontSizeValue">16px</span>
+                <input type="range" id="fontSize" min="12" max="100" value="40">
+                <span id="fontSizeValue">40px</span>
             </label>
             <label>颜色：
                 <input type="color" id="fontColor" value="#333333">
             </label>
             <label>左边距：
-                <input type="range" id="marginLeft" min="0" max="200" value="50">
-                <span id="marginLeftValue">50px</span>
+                <input type="range" id="marginLeft" min="0" max="200" value="100">
+                <span id="marginLeftValue">100px</span>
             </label>
             <label>右边距：
                 <input type="range" id="marginRight" min="0" max="200" value="50">
@@ -196,34 +203,44 @@
             <button id="startRecord" class="record-control-btn">开始录音</button>
             <button id="stopRecord" class="record-control-btn" disabled>停止录音</button>
             <button id="playRecord" class="record-control-btn" disabled>试听</button>
-            <button id="saveRecord" class="record-control-btn" disabled>保存录音</button>
             <label>
                 <input type="checkbox" id="audioSync"> 音频智能识别滚动
             </label>
         </div>
     </div>
 
-    <!-- 倒计时设置面板 -->
-    <div class="settings-panel" id="countdownSettings" style="display: none;">
-        <h3>倒计时设置</h3>
-        <div class="setting-group">
-            <label>倒计时时长（秒）：
-                <input type="number" id="countdownDuration" min="0" max="10" value="0">
-            </label>
-            <button id="startCountdown" class="record-control-btn">开始倒计时</button>
-        </div>
-    </div>
+
 
     <!-- 倒计时显示 -->
     <div class="countdown-display" id="countdownDisplay" style="display: none;">
         <span id="countdownText">3</span>
     </div>
 
+    <!-- 音频播放弹窗 -->
+    <div class="audio-player-modal" id="audioPlayerModal" style="display: none;">
+        <div class="audio-player-content">
+            <div class="audio-player-header">
+                <h3>录音试听</h3>
+                <button class="close-btn" id="closeAudioPlayer">×</button>
+            </div>
+            <div class="audio-player-body">
+                <audio id="audioPlayer" controls>
+                    您的浏览器不支持音频播放。
+                </audio>
+                <div class="audio-info">
+                    <span id="audioFileName">录音文件</span>
+                    <span id="audioDuration">--:--</span>
+                </div>
+            </div>
+            <div class="audio-player-footer">
+                <button id="replayAudio" class="audio-control-btn">重新播放</button>
+                <button id="downloadAudio" class="audio-control-btn">下载录音</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 隐藏的文件输入 -->
     <input type="file" id="fileInput" accept=".txt" style="display: none;">
-
-    <!-- 音频元素 -->
-    <audio id="audioPlayer" style="display: none;"></audio>
 
     <script src="js/main.js"></script>
     <script src="js/theme.js"></script>
