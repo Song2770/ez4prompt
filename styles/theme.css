@@ -1,0 +1,112 @@
+/* 浅色主题 */
+.light-theme {
+    background-color: #EEF7FC;
+    color: #333333;
+}
+
+.light-theme .top-header {
+    background: rgba(238, 247, 252, 0.9);
+    color: #333333;
+}
+
+.light-theme .lock-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333333;
+}
+
+.light-theme .text-editor {
+    background: transparent;
+    color: #333333;
+}
+
+.light-theme .settings-panel {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+}
+
+.light-theme .settings-panel h3 {
+    color: #333333;
+}
+
+.light-theme .setting-group label {
+    color: #555555;
+}
+
+.light-theme .custom-scrollbar {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .sidebar-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333333;
+}
+
+/* 深色主题 */
+.dark-theme {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.dark-theme .top-header {
+    background: rgba(20, 20, 20, 0.9);
+    color: #ffffff;
+}
+
+.dark-theme .lock-btn {
+    background: rgba(40, 40, 40, 0.9);
+    color: #ffffff;
+}
+
+.dark-theme .text-editor {
+    background: transparent;
+    color: #ffffff;
+}
+
+.dark-theme .settings-panel {
+    background: rgba(30, 30, 30, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .settings-panel h3 {
+    color: #ffffff;
+    border-bottom-color: #444;
+}
+
+.dark-theme .setting-group label {
+    color: #cccccc;
+}
+
+.dark-theme .setting-group input[type="text"],
+.dark-theme .setting-group input[type="number"],
+.dark-theme .setting-group select {
+    background: #444;
+    color: #fff;
+    border-color: #666;
+}
+
+.dark-theme .custom-scrollbar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.dark-theme .sidebar-btn {
+    background: rgba(40, 40, 40, 0.9);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .record-control-btn {
+    background: #007bff;
+}
+
+.dark-theme .record-control-btn:hover:not(:disabled) {
+    background: #0056b3;
+}

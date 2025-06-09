@@ -1,0 +1,85 @@
+/* 自定义滚动条 */
+.custom-scrollbar {
+    position: fixed;
+    right: 10px;
+    top: 60px;
+    bottom: 20px;
+    width: 12px;
+    border-radius: 6px;
+    z-index: 800;
+    transition: all 0.3s ease;
+}
+
+.custom-scrollbar:hover {
+    width: 16px;
+}
+
+.scrollbar-thumb {
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 20px;
+}
+
+.scrollbar-thumb:hover {
+    transform: scaleX(1.2);
+}
+
+/* 文本编辑器特殊状态 */
+.text-editor.locked {
+    cursor: default;
+    user-select: none;
+}
+
+.text-editor.flipped-horizontal {
+    transform: scaleX(-1);
+}
+
+.text-editor.flipped-vertical {
+    transform: scaleY(-1);
+}
+
+.text-editor.flipped-both {
+    transform: scale(-1, -1);
+}
+
+.text-editor.auto-scrolling {
+    scroll-behavior: smooth;
+}
+
+/* 文本动画效果 */
+.text-editor p {
+    margin-bottom: 0.8em;
+    transition: all 0.3s ease;
+}
+
+.text-editor p.highlight {
+    background: rgba(255, 255, 0, 0.2);
+    border-left: 3px solid #ffeb3b;
+    padding-left: 10px;
+    margin-left: -13px;
+}
+
+/* 全屏模式下的滚动条 */
+.fullscreen .custom-scrollbar {
+    top: 20px;
+}
+
+/* 移动端文本编辑器 */
+@media (max-width: 768px) {
+    .text-editor {
+        padding: 15px 30px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .custom-scrollbar {
+        width: 8px;
+        right: 5px;
+    }
+    
+    .custom-scrollbar:hover {
+        width: 12px;
+    }
+}
