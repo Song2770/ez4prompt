@@ -1,5 +1,5 @@
 // 主题控制器
-class ThemeController {
+export class ThemeController {
     constructor() {
         this.currentTheme = 'dark';
         this.init();

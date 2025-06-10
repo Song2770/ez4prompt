@@ -1,5 +1,5 @@
 // 翻转控制器
-class FlipController {
+export class FlipController {
     constructor() {
         this.init();
     }

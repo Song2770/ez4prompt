@@ -1,5 +1,5 @@
 // 设置控制器
-class SettingsController {
+export class SettingsController {
     constructor() {
         this.init();
     }

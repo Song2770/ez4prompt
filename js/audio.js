@@ -1,5 +1,5 @@
 // 音频控制器
-class AudioController {
+export class AudioController {
     constructor() {
         this.mediaRecorder = null;
         this.audioChunks = [];

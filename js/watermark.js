@@ -1,5 +1,5 @@
 // 水印控制器
-class WatermarkController {
+export class WatermarkController {
     constructor() {
         this.init();
     }

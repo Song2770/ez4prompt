@@ -1,5 +1,5 @@
 // 滚动控制器
-class ScrollController {
+export class ScrollController {
     constructor() {
         this.isAutoScrolling = false;
         this.scrollSpeed = 30;

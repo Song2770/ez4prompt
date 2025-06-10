@@ -1,5 +1,5 @@
 // 文本控制器
-class TextController {
+export class TextController {
     constructor() {
         this.init();
     }

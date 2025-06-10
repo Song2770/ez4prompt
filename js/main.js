@@ -1,3 +1,13 @@
+// 导入所有控制器模块
+import { ThemeController } from './theme.js';
+import { ScrollController } from './scroll.js';
+import { TextController } from './text.js';
+import { AudioController } from './audio.js';
+import { SettingsController } from './settings.js';
+import { WatermarkController } from './watermark.js';
+import { FlipController } from './flip.js';
+import { defaultText } from './defaultText.js';
+
 // 主应用程序入口
 class TeleprompterApp {
     constructor() {
@@ -13,6 +23,15 @@ class TeleprompterApp {
     }
     
     init() {
+        // 先初始化各个模块
+        window.themeController = new ThemeController();
+        window.scrollController = new ScrollController();
+        window.textController = new TextController();
+        window.audioController = new AudioController();
+        window.settingsController = new SettingsController();
+        window.watermarkController = new WatermarkController();
+        window.flipController = new FlipController();
+        
         this.setupEventListeners();
         this.loadDefaultText();
         this.updateTimeDisplay();
@@ -21,15 +40,6 @@ class TeleprompterApp {
         
         // 每秒更新时间显示
         setInterval(() => this.updateTimeDisplay(), 1000);
-        
-        // 初始化各个模块
-        window.themeController = new ThemeController();
-        window.scrollController = new ScrollController();
-        window.textController = new TextController();
-        window.audioController = new AudioController();
-        window.settingsController = new SettingsController();
-        window.watermarkController = new WatermarkController();
-        window.flipController = new FlipController();
     }
     
     getDefaultSettings() {
@@ -417,16 +427,12 @@ class TeleprompterApp {
     }
     
     loadDefaultText() {
-        fetch('example.txt')
-            .then(response => response.text())
-            .then(text => {
-                window.textController.setText(text);
-                this.updateScrollbar();
-            })
-            .catch(error => {
-                console.error('加载默认文本失败:', error);
-                window.textController.setText('请导入文本文件或直接编辑此处内容。');
-            });
+        try {
+            window.textController.setText('我是一个提词器的示例文本。\n你可以直接编辑我，或者粘贴内容。\n可以点击左侧功能区的文件夹图标，上传文件。需要是"*.txt"的文本文档格式。\n本项目支持翻转(水平、垂直)\n在开始使用之前，请注意设置以下内容：字体，字体大小，滚动速度\n项目已开源到Github，地址为https://github.com/Song2770/ez4prompt\n如果你觉得好用，不妨为我的项目点一颗Star。\n如果你遇到了问题，欢迎留言。');
+            this.updateScrollbar();
+        } catch (error) {
+            console.error('加载默认文本失败:', error);
+        }
     }
     
     updateTimeDisplay() {
