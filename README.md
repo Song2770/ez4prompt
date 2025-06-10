@@ -1,6 +1,6 @@
 # 🎬 智能提词器 (ez4prompt)
 
-![Logo](readme.src/icon.png)
+![Logo](readme.src/icon.ico)
 
 一个现代化的智能提词器应用，专为主播、演讲者和内容创作者设计！✨
 
