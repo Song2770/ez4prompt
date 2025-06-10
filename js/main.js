@@ -6,7 +6,7 @@ import { AudioController } from './audio.js';
 import { SettingsController } from './settings.js';
 import { WatermarkController } from './watermark.js';
 import { FlipController } from './flip.js';
-import { defaultText } from './defaultText.js';
+import { DraggableLine } from './draggable-line.js';
 
 // 主应用程序入口
 class TeleprompterApp {
@@ -31,6 +31,8 @@ class TeleprompterApp {
         window.settingsController = new SettingsController();
         window.watermarkController = new WatermarkController();
         window.flipController = new FlipController();
+        window.draggableLine = new DraggableLine();
+        window.draggableLine.loadPosition();
         
         this.setupEventListeners();
         this.loadDefaultText();

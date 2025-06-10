@@ -81,10 +81,22 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(to right, transparent 0%, #ff4444 10%, #ff4444 95%, transparent 100%);
+    background: linear-gradient(to right, transparent 0%, #ff4444 15%, #ff4444 90%, transparent 100%);
     z-index: 500;
     box-shadow: 0 0 40px rgba(255, 68, 68, 0.9);
     transition: opacity 0.3s ease;
+    cursor: ns-resize;
+    padding: 1px 0; 
+}
+
+.reading-line:hover {
+    box-shadow: 0 0 60px rgba(255, 68, 68, 1);
+    transform: all 0.3s ease;
+}
+
+.reading-line.dragging {
+    transition: none;
+    box-shadow: 0 0 80px rgba(255, 68, 68, 1);
 }
 
 /* 主内容区域 */
